@@ -1,53 +1,121 @@
-# app.py - handles system logic and routing
-# run this file starting the server: python app.py
+# app.py - Main Logic for M-COSMETICS Boutique IMS
+# Developed for Academic Presentation: This module handles routing, 
+# financial logic, and stock security protocols.
 
-from flask import Flask, render_template, request, redirect, url_for, flash
-from flask_login import LoginManager, login_user, logout_user, login_required, current_user
-from models import db, User, Product, Sale, StockAudit
 import os
 from datetime import datetime, date, timedelta
+from flask import Flask, render_template, request, redirect, url_for, flash
+from flask_login import LoginManager, login_user, logout_user, login_required, current_user
+from models import db, User, Category, Product, Sale, StockAudit
+from sqlalchemy import text
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = 'nairobi-boutique-secure-key'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///boutique.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SECRET_KEY'] = 'nairobi-boutique-secure-key'
 
 db.init_app(app)
-
-# login manager setup (objective 1.3.2-I)
 login_manager = LoginManager()
-login_manager.init_app(app)
 login_manager.login_view = 'login'
+login_manager.init_app(app)
 
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
 
-# setup database and default data
+# --- SYSTEM INITIALIZATION ---
+# Objective 1.3.2-I: Implementation of secure user authentication
 with app.app_context():
     db.create_all()
     
-    # ensure Maureen exists with correct password
+    # AUTO-FIX: Check if category_id column exists (prevents OperationalError)
+    try:
+        db.session.execute(text("SELECT category_id FROM product LIMIT 1"))
+    except Exception:
+        db.session.rollback()
+        # Column is missing, let's add it manually
+        db.session.execute(text("ALTER TABLE product ADD COLUMN category_id INTEGER REFERENCES category(id)"))
+        db.session.commit()
+        print("Database Updated: Added missing 'category_id' column.")
+    
+    # NEW: Migrate existing product categories to the new Category table
+    existing_categories = db.session.query(Product.category).distinct().all()
+    for cat_tuple in existing_categories:
+        cat_name = cat_tuple[0]
+        if cat_name and not Category.query.filter_by(name=cat_name).first():
+            new_cat = Category(name=cat_name)
+            db.session.add(new_cat)
+            db.session.commit()
+    
+    # Link items that aren't linked yet
+    products_to_link = Product.query.filter(Product.category_id == None).all()
+    for p in products_to_link:
+        cat = Category.query.filter_by(name=p.category).first()
+        if cat:
+            p.category_id = cat.id
+    db.session.commit()
+
+    # Check if the primary admin 'Maureen' exists (Requirement 1.4)
     maureen = User.query.filter_by(username='Maureen').first()
     if not maureen:
+        # Register new admin with secure hashed password
         maureen = User(username='Maureen')
         maureen.set_password('manage200')
         db.session.add(maureen)
+        db.session.commit()
     else:
-        maureen.set_password('manage200') # force update password in case of typo
-    db.session.commit()
-    
-    # starter stock categories for a boutique
-    if Product.query.count() == 0:
-        samples = [
-            Product(name='Matte Red Lipstick', category='Cosmetics', cost_price=450, selling_price=800, stock_quantity=20, min_stock_level=5),
-            Product(name='Luxury Oud Perfume', category='Fragrance', cost_price=2500, selling_price=4500, stock_quantity=3, min_stock_level=5),
-            Product(name='Gold Plated Necklace', category='Jewelry', cost_price=1200, selling_price=2500, stock_quantity=10, min_stock_level=3)
-        ]
-        db.session.bulk_save_objects(samples)
+        # Force correct password for demonstration consistency
+        maureen.set_password('manage200')
         db.session.commit()
 
-# login and logout 
+# --- CATEGORY MANAGEMENT ROUTES ---
+
+@app.route('/categories')
+@login_required
+def categories():
+    cats = Category.query.all()
+    return render_template('categories.html', cats=cats)
+
+@app.route('/add_category', methods=['POST'])
+@login_required
+def add_category():
+    name = request.form.get('name')
+    if name and not Category.query.filter_by(name=name).first():
+        new_cat = Category(name=name)
+        db.session.add(new_cat)
+        db.session.commit()
+        flash(f'Category "{name}" added!', 'success')
+    else:
+        flash('Category already exists or invalid name.', 'danger')
+    return redirect(url_for('categories'))
+
+@app.route('/edit_category/<int:id>', methods=['POST'])
+@login_required
+def edit_category(id):
+    cat = Category.query.get_or_404(id)
+    new_name = request.form.get('name')
+    if new_name:
+        cat.name = new_name
+        db.session.commit()
+        flash('Category updated!', 'success')
+    return redirect(url_for('categories'))
+
+@app.route('/delete_category/<int:id>', methods=['POST'])
+@login_required
+def delete_category(id):
+    cat = Category.query.get_or_404(id)
+    # Move items to "Uncategorized" before deleting? For now, we allow delete if empty
+    if cat.products:
+        flash('Cannot delete category with items. Move items first.', 'danger')
+    else:
+        db.session.delete(cat)
+        db.session.commit()
+        flash('Category removed.', 'warning')
+    return redirect(url_for('categories'))
+
+# --- ROUTES & BUSINESS LOGIC ---
+
+# Login Interface (Objective 1.3.2-I: User Verification)
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
@@ -57,6 +125,7 @@ def login():
         if user and user.check_password(request.form.get('password')):
             login_user(user)
             return redirect(url_for('index'))
+        # Flash message for failed validation (UX improvement)
         flash('Invalid username or password', 'danger')
     return render_template('login.html')
 
@@ -89,6 +158,7 @@ def index():
 @login_required
 def inventory():
     items = Product.query.all()
+    # Pass categories for quick filtering in future
     return render_template('inventory.html', items=items)
 
 # add new product (objective 1.3.2-II)
@@ -96,9 +166,12 @@ def inventory():
 @login_required
 def add_product():
     if request.method == 'POST':
+        cat_id = request.form.get('category_id')
+        cat = Category.query.get(cat_id)
         new_item = Product(
             name=request.form.get('name'),
-            category=request.form.get('category'),
+            category_id=cat_id,
+            category=cat.name if cat else 'Other',
             cost_price=float(request.form.get('cost')),
             selling_price=float(request.form.get('price')),
             stock_quantity=int(request.form.get('stock')),
@@ -108,7 +181,9 @@ def add_product():
         db.session.commit()
         flash('New item added to stock!', 'success')
         return redirect(url_for('inventory'))
-    return render_template('add_product.html')
+    
+    cats = Category.query.all()
+    return render_template('add_product.html', categories=cats)
 
 # edit item details (update functionality)
 @app.route('/edit_product/<int:id>', methods=['GET', 'POST'])
@@ -116,16 +191,21 @@ def add_product():
 def edit_product(id):
     product = Product.query.get_or_404(id)
     if request.method == 'POST':
+        cat_id = request.form.get('category_id')
+        cat = Category.query.get(cat_id)
         product.name = request.form.get('name')
-        product.category = request.form.get('category')
-        product.cost_price = float(request.form.get('cost')),
-        product.selling_price = float(request.form.get('price')),
-        product.stock_quantity = int(request.form.get('stock')),
+        product.category_id = cat_id
+        product.category = cat.name if cat else 'Other'
+        product.cost_price = float(request.form.get('cost'))
+        product.selling_price = float(request.form.get('price'))
+        product.stock_quantity = int(request.form.get('stock'))
         product.min_stock_level = int(request.form.get('min_level'))
         db.session.commit()
         flash(f'Changes saved for {product.name}', 'success')
         return redirect(url_for('inventory'))
-    return render_template('edit_product.html', item=product)
+    
+    cats = Category.query.all()
+    return render_template('edit_product.html', item=product, categories=cats)
 
 # remove product from system (delete functionality)
 @app.route('/delete_product/<int:id>', methods=['POST'])
