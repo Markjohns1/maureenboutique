@@ -1,0 +1,89 @@
+{% extends "layout.html" %}
+
+{% block title %}Stock Audit | Elite Bazaar{% endblock %}
+
+{% block content %}
+<div class="mb-5">
+    <h1 class="fw-extrabold mb-0">Check <span class="text-primary">Stock</span></h1>
+    <p class="text-muted">Use this tool to track missing items or damaged beauty products.</p>
+</div>
+
+<div class="row">
+    <!-- Audit Form -->
+    <div class="col-md-5">
+        <div class="card p-4 border-0 shadow-sm mb-4">
+            <h5 class="fw-bold mb-4">Update Item Count</h5>
+            <form action="{{ url_for('audit') }}" method="POST">
+                <div class="mb-3">
+                    <label class="form-label small fw-bold">Select Item</label>
+                    <select name="product_id" class="form-select bg-light border-0 py-3" required>
+                        <option value="">-- Choose Item --</option>
+                        {% for p in products %}
+                        <option value="{{ p.id }}">{{ p.name }} (System: {{ p.stock_quantity }})</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label small fw-bold">Actual Items on Shelf</label>
+                    <input type="number" name="physical_count" class="form-control bg-light border-0 py-3"
+                        placeholder="How many are there right now?" required>
+                </div>
+                <div class="mb-4">
+                    <label class="form-label small fw-bold">Note (Optional)</label>
+                    <textarea name="notes" class="form-control bg-light border-0" rows="3"
+                        placeholder="e.g. 2 pieces were broken"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary w-100 py-3 fw-bold">RECORD UPDATE</button>
+            </form>
+        </div>
+
+        <div class="alert alert-info border-0 shadow-sm small">
+            <i class="fa fa-info-circle me-2"></i>
+            <strong>Pro Tip:</strong> Submitting this form will update the "System Stock" to match your "Physical Count"
+            and log any missing items as a loss.
+        </div>
+    </div>
+
+    <!-- Audit History -->
+    <div class="col-md-7">
+        <div class="card p-4 border-0 shadow-sm">
+            <h5 class="fw-bold mb-4">Recent Audit History</h5>
+            <div class="table-responsive">
+                <table class="table table-sm align-middle">
+                    <thead class="bg-light">
+                        <tr>
+                            <th>Date</th>
+                            <th>Product</th>
+                            <th class="text-center">System</th>
+                            <th class="text-center">Actual</th>
+                            <th class="text-end text-danger">Lost</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for a in audits %}
+                        <tr>
+                            <td class="small">{{ a.audit_date.strftime('%d/%m/%y') }}</td>
+                            <td class="fw-bold small">{{ a.product.name }}</td>
+                            <td class="text-center">{{ a.system_stock }}</td>
+                            <td class="text-center">{{ a.physical_count }}</td>
+                            <td class="text-end text-danger fw-bold">
+                                {% if a.discrepancy > 0 %}
+                                - {{ a.discrepancy }}
+                                {% else %}
+                                0
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="5" class="text-center py-5 text-muted small">No reconciliation logs found. Run
+                                your first shelf-count today.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

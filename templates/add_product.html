@@ -1,0 +1,62 @@
+{% extends "layout.html" %}
+
+{% block title %}Add Product | Elite Bazaar{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card p-4 shadow border-0">
+            <h1 class="fw-bold mb-4">Stock <span class="text-primary">Entry</span></h1>
+            <p class="text-muted">Register a new product into the system.</p>
+
+            <form method="POST">
+                <div class="mb-3">
+                    <label class="form-label small fw-bold">Product Name</label>
+                    <input type="text" name="name" class="form-control form-control-lg bg-light border-0"
+                        placeholder="e.g. Lavender Night Perfume" required>
+                </div>
+                <div class="row">
+                    <div class="col-6 mb-3">
+                        <label class="form-label small fw-bold">Category</label>
+                        <select name="category" class="form-select form-select-lg bg-light border-0" required>
+                            <option value="Cosmetics">Cosmetics</option>
+                            <option value="Fragrance">Fragrance</option>
+                            <option value="Fashion">Fashion</option>
+                            <option value="Jewelry">Jewelry</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="col-6 mb-3">
+                        <label class="form-label small fw-bold">Initial Stock</label>
+                        <input type="number" name="stock" class="form-control form-control-lg bg-light border-0"
+                            placeholder="0" required>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6 mb-3">
+                        <label class="form-label small fw-bold">Cost Price (Buying)</label>
+                        <input type="number" step="0.01" name="cost"
+                            class="form-control form-control-lg bg-light border-0" placeholder="KES" required>
+                    </div>
+                    <div class="col-6 mb-3">
+                        <label class="form-label small fw-bold">Selling Price</label>
+                        <input type="number" step="0.01" name="price"
+                            class="form-control form-control-lg bg-light border-0" placeholder="KES" required>
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <label class="form-label small fw-bold">Alert Level (Low Stock Warning)</label>
+                    <input type="number" name="min_level" class="form-control form-control-lg bg-light border-0"
+                        value="5" required>
+                    <div class="form-text x-small">The dashboard will turn RED when stock hits this number.</div>
+                </div>
+
+                <div class="d-flex gap-2">
+                    <a href="{{ url_for('inventory') }}" class="btn btn-light flex-grow-1 py-3 fw-bold">CANCEL</a>
+                    <button type="submit" class="btn btn-primary flex-grow-1 py-3 fw-bold">ADD TO INVENTORY</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

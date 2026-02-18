@@ -1,0 +1,106 @@
+{% extends "layout.html" %}
+
+{% block title %}Dashboard | Elite Bazaar{% endblock %}
+
+{% block content %}
+<div class="row align-items-center mb-5">
+    <div class="col-md-6">
+        <h1 class="fw-extrabold mb-0">Sales <span class="text-primary">Summary</span></h1>
+        <p class="text-muted">Total profit and stock on hand.</p>
+    </div>
+    <div class="col-md-6 text-md-end">
+        <a href="{{ url_for('add_product') }}" class="btn btn-primary shadow-sm">ADD NEW ITEM</a>
+    </div>
+</div>
+
+<div class="row g-0 mb-5 border-top border-bottom bg-white shadow-sm">
+    <!-- Revenue -->
+    <div class="col-6 col-md-3 border-end-md">
+        <div class="stat-card border-bottom border-end">
+            <span class="stat-value text-dark small">KES {{ "{:,.0f}".format(rev) }}</span>
+            <span class="stat-label">Stock Value</span>
+        </div>
+    </div>
+    <!-- Profit -->
+    <div class="col-6 col-md-3">
+        <div class="stat-card border-bottom border-md-bottom-0">
+            <span class="stat-value text-success">KES {{ "{:,.0f}".format(prof) }}</span>
+            <span class="stat-label">Total Profit</span>
+        </div>
+    </div>
+    <!-- Today -->
+    <div class="col-6 col-md-3 border-start-md">
+        <div class="stat-card border-end">
+            <span class="stat-value text-primary">KES {{ "{:,.0f}".format(today_p) }}</span>
+            <span class="stat-label">Today's Profit</span>
+        </div>
+    </div>
+    <!-- Alerts -->
+    <div class="col-6 col-md-3">
+        <div class="stat-card">
+            <span class="stat-value {% if low > 0 %}text-danger{% endif %}">{{ low }}</span>
+            <span class="stat-label">Low Stock</span>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card p-5">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h4 class="fw-bold mb-0">Recent Sales</h4>
+                <a href="{{ url_for('inventory') }}" class="text-primary text-decoration-none small fw-bold">SEE ALL
+                    STOCK</a>
+            </div>
+            <div class="table-responsive">
+                <table class="table align-middle">
+                    <thead>
+                        <tr>
+                            <th>Item Name</th>
+                            <th class="text-center">Units</th>
+                            <th class="text-end">Profit (KES)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for sale in sales %}
+                        <tr>
+                            <td>
+                                <span class="fw-bold">{{ sale.product.name }}</span><br>
+                                <span class="text-muted small" style="font-size: 0.65rem;">{{
+                                    sale.sale_date.strftime('%d/%m/%y at %H:%M') }}</span>
+                            </td>
+                            <td class="text-center">{{ sale.quantity }}</td>
+                            <td class="text-end text-success fw-bold">+ {{ "{:,.0f}".format(sale.total_profit) }}</td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="3" class="text-center py-5 text-muted small">Systems clear. No sales registered
+                                today.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Professional Sidebar: High Contrast Light Theme -->
+    <div class="col-md-4">
+        <div class="card p-5 border-0 shadow-sm"
+            style="background-color: #fcfcfc; border-left: 2px solid var(--primary-color) !important;">
+            <h6 class="fw-bold text-uppercase ls-wide mb-4"
+                style="font-size: 0.8rem; letter-spacing: 1px; color: var(--primary-color);">Stock Audit Shield</h6>
+            <p class="small text-dark mb-4" style="line-height: 1.6;">Shrinkage from theft or damage directly affects
+                your net profit. Use the <strong>Audit</strong> tool to reconcile physical shelf counts with system
+                records weekly.</p>
+
+            <hr class="my-4" style="opacity: 0.1;">
+
+            <h6 class="fw-bold text-uppercase ls-wide mb-4"
+                style="font-size: 0.8rem; letter-spacing: 1px; color: var(--primary-color);">Inventory Optimization</h6>
+            <p class="small text-dark m-0" style="line-height: 1.6;">Fast-moving items like perfumes are automatically
+                monitored. If they hit the 'Min Level', they appear in the Restock Alert column above.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

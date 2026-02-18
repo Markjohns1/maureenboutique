@@ -1,0 +1,40 @@
+{% extends "layout.html" %}
+
+{% block title %}Login | Elite Bazaar{% endblock %}
+
+{% block content %}
+<div class="login-container">
+    <div class="text-center mb-4">
+        <i class="fa-solid fa-wand-sparkles fa-3x text-primary mb-3"></i>
+        <h2 class="mb-0"><span class="brand-m">M-</span><span class="brand-text">COSMETICS</span></h2>
+        <p class="text-muted small">Boutique Management System</p>
+    </div>
+
+    <form method="POST">
+        <div class="mb-3">
+            <label class="form-label small fw-bold">Username</label>
+            <input type="text" name="username" class="form-control form-control-lg bg-light" placeholder="admin"
+                required autofocus>
+        </div>
+        <div class="mb-4">
+            <label class="form-label small fw-bold">Password</label>
+            <input type="password" name="password" class="form-control form-control-lg bg-light" placeholder="••••••••"
+                required>
+        </div>
+        <button type="submit" class="btn btn-maroon w-100 py-3 fw-bold">SIGN IN</button>
+    </form>
+
+    <div class="mt-4 text-center">
+        <p class="text-muted extra-small" style="font-size: 0.7rem;">&copy; 2024 Nairobi Retail Solutions. Internal Use
+            Only.</p>
+    </div>
+</div>
+
+<style>
+    body {
+        background-image: linear-gradient(rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.8)), url('https://images.unsplash.com/photo-1596462502278-27bfaf410911?auto=format&fit=crop&q=80&w=1000');
+        background-size: cover;
+        background-position: center;
+    }
+</style>
+{% endblock %}

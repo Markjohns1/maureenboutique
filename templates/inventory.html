@@ -1,0 +1,75 @@
+{% extends "layout.html" %}
+
+{% block title %}Inventory | Elite Bazaar{% endblock %}
+
+{% block content %}
+<div class="row align-items-center mb-5">
+    <div class="col-md-6">
+        <h1 class="fw-extrabold mb-0">Active <span class="text-primary">Inventory</span></h1>
+        <p class="text-muted">Manage your cosmetics and fashion catalog.</p>
+    </div>
+    <div class="col-md-6 text-md-end">
+        <a href="{{ url_for('add_product') }}" class="btn btn-primary"><i class="fa fa-plus me-2"></i>Add New Item</a>
+    </div>
+</div>
+
+<div class="card p-4 shadow-sm border-0">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead>
+                <tr>
+                    <th class="px-4">Item Details</th>
+                    <th>Category</th>
+                    <th class="text-center">Stock</th>
+                    <th class="text-end">Buying (KES)</th>
+                    <th class="text-end">Selling (KES)</th>
+                    <th class="text-center px-4">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in items %}
+                <tr>
+                    <td class="px-4">
+                        <span class="fw-bold d-block text-dark">{{ item.name }}</span>
+                        <span class="text-muted x-small badge bg-light">{{ item.id }}</span>
+                    </td>
+                    <td>{{ item.category }}</td>
+                    <td class="text-center">
+                        <span
+                            class="fw-extra-bold {% if item.stock_quantity <= item.min_stock_level %}text-danger{% endif %}">
+                            {{ item.stock_quantity }}
+                        </span>
+                        {% if item.stock_quantity <= item.min_stock_level %} <br><span class="badge bg-danger x-small"
+                                style="font-size: 0.6rem;">REORDER NOW</span>
+                            {% endif %}
+                    </td>
+                    <td class="text-end text-muted small">{{ "{:,.0f}".format(item.cost_price) }}</td>
+                    <td class="text-end fw-bold text-dark">{{ "{:,.0f}".format(item.selling_price) }}</td>
+                    <td class="text-center px-4">
+                        <div class="d-flex gap-2 justify-content-center mb-2">
+                            <form action="{{ url_for('sell_product', id=item.id) }}" method="POST" class="d-flex">
+                                <input type="number" name="quantity" value="1" min="1" max="{{ item.stock_quantity }}"
+                                    class="form-control form-control-sm me-1" style="width: 50px; border-radius: 0;">
+                                <button type="submit" class="btn btn-sm btn-dark" style="border-radius: 0;" {% if
+                                    item.stock_quantity==0 %}disabled{% endif %}>
+                                    SELL
+                                </button>
+                            </form>
+                            <a href="{{ url_for('edit_product', id=item.id) }}" class="btn btn-sm btn-outline-secondary"
+                                style="border-radius: 0;">MODIFY</a>
+                        </div>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="6" class="text-center py-5">
+                        <i class="fa fa-box-open fa-3x text-muted mb-3 d-block"></i>
+                        <span class="text-muted">Your inventory is empty. Start by adding items.</span>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
