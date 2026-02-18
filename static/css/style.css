@@ -18,6 +18,8 @@
 
 body {
     font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
+    /* Montserrat Medium as per school requirement */
     background-color: var(--light-gray);
     color: var(--text-dark);
     margin: 0;
@@ -49,7 +51,8 @@ body {
 
 .nav-link {
     color: var(--text-dark) !important;
-    font-weight: 700;
+    font-weight: 600;
+    /* Medium-Bold balance */
     text-transform: uppercase;
     font-size: 0.8rem;
     padding: 0.8rem 0 !important;
@@ -69,8 +72,9 @@ body {
 
 /* Hero Section / Headlines */
 .fw-extrabold {
-    font-weight: 800;
-    letter-spacing: -1px;
+    font-weight: 700;
+    /* Clean, bold but not chunky */
+    letter-spacing: -0.5px;
 }
 
 /* Boutique Cards: Solid & Stable */
@@ -164,7 +168,8 @@ body {
     text-transform: uppercase;
     font-weight: 700;
     letter-spacing: 1px;
-    padding: 1rem 2rem;
+    padding: 0.7rem 2rem;
+    /* Reduced thickness */
 }
 
 .btn-primary:hover {
@@ -180,7 +185,8 @@ body {
     border-radius: 0;
     text-transform: uppercase;
     font-weight: 700;
-    padding: 1rem 2rem;
+    padding: 0.7rem 2rem;
+    /* Reduced thickness */
 }
 
 .btn-maroon:hover {
@@ -194,6 +200,8 @@ body {
     border-radius: 0;
     text-transform: uppercase;
     font-weight: 700;
+    padding: 0.7rem 1.5rem;
+    /* Match thickness */
 }
 
 .btn-light:hover {
