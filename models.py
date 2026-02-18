@@ -20,11 +20,19 @@ class User(UserMixin, db.Model):
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
 
-# table 2: products - stores item details and prices (objective 1.3.2-II)
+# table 2: categories - for organizing products (New Enhancement)
+class Category(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), unique=True, nullable=False)
+    # relationship to see all items in this category
+    products = db.relationship('Product', backref='category_rel', lazy=True)
+
+# table 3: products - stores item details and prices (objective 1.3.2-II)
 class Product(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(200), nullable=False)
-    category = db.Column(db.String(100))
+    category = db.Column(db.String(100)) # kept as string for compatibility
+    category_id = db.Column(db.Integer, db.ForeignKey('category.id')) # link to new Category table
     cost_price = db.Column(db.Float, nullable=False)     # buying price from suppliers
     selling_price = db.Column(db.Float, nullable=False)  # price for customers
     stock_quantity = db.Column(db.Integer, default=0)    # physical units on hand
