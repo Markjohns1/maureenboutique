@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 
-{% block title %}Inventory | Elite Bazaar{% endblock %}
+{% block title %}Inventory | M-COSMETICS{% endblock %}
 
 {% block content %}
 <div class="row align-items-center mb-5">
@@ -33,7 +33,12 @@
                         <span class="fw-bold d-block text-dark">{{ item.name }}</span>
                         <span class="text-muted x-small badge bg-light">{{ item.id }}</span>
                     </td>
-                    <td>{{ item.category }}</td>
+                    <td>
+                        <span class="badge bg-purple text-white small px-2 py-1"
+                            style="background-color: var(--primary-color);">
+                            {{ item.category_rel.name if item.category_rel else item.category }}
+                        </span>
+                    </td>
                     <td class="text-center">
                         <span
                             class="fw-extra-bold {% if item.stock_quantity <= item.min_stock_level %}text-danger{% endif %}">

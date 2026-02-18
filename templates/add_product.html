@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 
-{% block title %}Add Product | Elite Bazaar{% endblock %}
+{% block title %}Add Product | M-COSMETICS{% endblock %}
 
 {% block content %}
 <div class="row justify-content-center">
@@ -17,14 +17,14 @@
                 </div>
                 <div class="row">
                     <div class="col-6 mb-3">
-                        <label class="form-label small fw-bold">Category</label>
-                        <select name="category" class="form-select form-select-lg bg-light border-0" required>
-                            <option value="Cosmetics">Cosmetics</option>
-                            <option value="Fragrance">Fragrance</option>
-                            <option value="Fashion">Fashion</option>
-                            <option value="Jewelry">Jewelry</option>
-                            <option value="Other">Other</option>
+                        <label class="form-label small fw-bold">Department / Category</label>
+                        <select name="category_id" class="form-select form-select-lg bg-light border-0" required>
+                            <option value="">-- Select --</option>
+                            {% for cat in categories %}
+                            <option value="{{ cat.id }}">{{ cat.name }}</option>
+                            {% endfor %}
                         </select>
+                        <div class="form-text x-small">Manage these in the Categories tab.</div>
                     </div>
                     <div class="col-6 mb-3">
                         <label class="form-label small fw-bold">Initial Stock</label>

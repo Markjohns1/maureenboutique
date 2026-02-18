@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 
-{% block title %}Edit Product | Elite Bazaar{% endblock %}
+{% block title %}Edit Product | M-COSMETICS{% endblock %}
 
 {% block content %}
 <div class="row justify-content-center">
@@ -17,17 +17,12 @@
                 </div>
                 <div class="row">
                     <div class="col-6 mb-3">
-                        <label class="form-label small fw-bold">Category</label>
-                        <select name="category" class="form-select form-select-lg bg-light border-0" required>
-                            <option value="Cosmetics" {% if item.category=='Cosmetics' %}selected{% endif %}>Cosmetics
-                            </option>
-                            <option value="Fragrance" {% if item.category=='Fragrance' %}selected{% endif %}>Fragrance
-                            </option>
-                            <option value="Fashion" {% if item.category=='Fashion' %}selected{% endif %}>Fashion
-                            </option>
-                            <option value="Jewelry" {% if item.category=='Jewelry' %}selected{% endif %}>Jewelry
-                            </option>
-                            <option value="Other" {% if item.category=='Other' %}selected{% endif %}>Other</option>
+                        <label class="form-label small fw-bold">Department / Category</label>
+                        <select name="category_id" class="form-select form-select-lg bg-light border-0" required>
+                            {% for cat in categories %}
+                            <option value="{{ cat.id }}" {% if item.category_id==cat.id %}selected{% endif %}>{{
+                                cat.name }}</option>
+                            {% endfor %}
                         </select>
                     </div>
                     <div class="col-6 mb-3">
