@@ -1,6 +1,5 @@
 # app.py - Main Logic for M-COSMETICS Boutique IMS
-# Developed for Academic Presentation: This module handles routing, 
-# financial logic, and stock security protocols.
+# This module handles routing, financial logic, and stock security protocols.
 
 import os
 from datetime import datetime, date, timedelta
@@ -64,9 +63,8 @@ with app.app_context():
         db.session.add(maureen)
         db.session.commit()
     else:
-        # Force correct password for demonstration consistency
-        maureen.set_password('manage200')
-        db.session.commit()
+        # Admin exists, no action needed.
+        pass
 
 # --- CATEGORY MANAGEMENT ROUTES ---
 
