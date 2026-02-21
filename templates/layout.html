@@ -26,14 +26,15 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto py-3 py-lg-0">
-                    <li class="nav-item"><a class="nav-link" href="{{ url_for('index') }}"><i
-                                class="fa-solid fa-chart-pie me-2"></i>Report</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ url_for('inventory') }}"><i
-                                class="fa-solid fa-boxes-stacked me-2"></i>Stock</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ url_for('categories') }}"><i
-                                class="fa-solid fa-tags me-2"></i>Categories</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ url_for('audit') }}"><i
-                                class="fa-solid fa-scale-balanced me-2"></i>Audit</a></li>
+                    <li class="nav-item"><a class="nav-link {% if request.endpoint == 'index' %}active{% endif %}"
+                            href="{{ url_for('index') }}"><i class="fa-solid fa-chart-pie me-2"></i>Report</a></li>
+                    <li class="nav-item"><a class="nav-link {% if request.endpoint == 'inventory' %}active{% endif %}"
+                            href="{{ url_for('inventory') }}"><i class="fa-solid fa-boxes-stacked me-2"></i>Stock</a>
+                    </li>
+                    <li class="nav-item"><a class="nav-link {% if request.endpoint == 'categories' %}active{% endif %}"
+                            href="{{ url_for('categories') }}"><i class="fa-solid fa-tags me-2"></i>Categories</a></li>
+                    <li class="nav-item"><a class="nav-link {% if request.endpoint == 'audit' %}active{% endif %}"
+                            href="{{ url_for('audit') }}"><i class="fa-solid fa-scale-balanced me-2"></i>Audit</a></li>
                     <li class="nav-item pt-3 pt-lg-0 ms-lg-4 border-top border-lg-0">
                         <span class="text-muted small d-block d-lg-inline mb-2 mb-lg-0 me-lg-3">
                             <i class="fa fa-circle-user me-1"></i>{{ current_user.username }}
