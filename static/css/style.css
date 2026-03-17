@@ -77,6 +77,39 @@ body {
     letter-spacing: -0.5px;
 }
 
+.hero-banner {
+    width: 100%;
+    height: 350px;
+    background: linear-gradient(rgba(27, 38, 59, 0.6), rgba(27, 38, 59, 0.6)), url('../pics/shop-img.png');
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--white);
+    text-align: center;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    border-bottom: 5px solid var(--accent-color);
+}
+
+.hero-banner h1 {
+    font-size: 3rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    text-shadow: 2px 2px 10px rgba(0,0,0,0.5);
+}
+
+@media (max-width: 768px) {
+    .hero-banner {
+        height: 250px;
+    }
+    .hero-banner h1 {
+        font-size: 1.8rem;
+    }
+}
+
 /* Boutique Cards: Solid & Stable */
 .card {
     border: none;
@@ -245,7 +278,7 @@ body {
     margin: 80px auto;
     background: var(--white);
     padding: 3rem;
-    border: 2px solid var(--primary-color);
-    /* Full border instead of just top */
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0,0,0,0.1);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    border-top: 5px solid var(--maroon-color);
 }

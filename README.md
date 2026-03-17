@@ -1,4 +1,4 @@
-# M-COSMETICS | Boutique Management System
+# M-BOUTIQUE | Boutique Management System
 
 A professional, high-end Inventory Management System (IMS) designed specifically for fashion and beauty boutiques. Built with Flask, this system provides real-time sales intelligence, profit tracking, and stock security.
 

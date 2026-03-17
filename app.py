@@ -1,4 +1,4 @@
-# app.py - Main Logic for M-COSMETICS Boutique IMS
+# app.py - Main Logic for M-BOUTIQUE Boutique IMS
 # This module handles routing, financial logic, and stock security protocols.
 
 import os
