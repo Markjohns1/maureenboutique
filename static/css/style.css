@@ -80,7 +80,7 @@ body {
 .hero-banner {
     width: 100%;
     height: 350px;
-    background: linear-gradient(rgba(27, 38, 59, 0.6), rgba(27, 38, 59, 0.6)), url('../pics/shop-img.png');
+    background: linear-gradient(rgba(27, 38, 59, 0.6), rgba(27, 38, 59, 0.6)), url('../pics/heroimg.png');
     background-size: cover;
     background-position: center;
     display: flex;
@@ -110,7 +110,7 @@ body {
     }
 }
 
-/* Boutique Cards: Solid & Stable */
+/* Cosmetic Cards: Solid & Stable */
 .card {
     border: none;
     border-radius: 0;
@@ -162,7 +162,7 @@ body {
     letter-spacing: 1.5px;
 }
 
-/* Boutique Inventory Table */
+/* Cosmetic Inventory Table */
 .table {
     border-collapse: separate;
     border-spacing: 0 10px;

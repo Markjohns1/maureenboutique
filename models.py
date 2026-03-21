@@ -1,4 +1,4 @@
-# this file defines the database structure for the boutique system
+# this file defines the database structure for the cosmetic system
 # it uses 4 tables to handle inventory, sales, and stock audits
 
 from flask_sqlalchemy import SQLAlchemy

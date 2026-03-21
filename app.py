@@ -1,4 +1,4 @@
-# app.py - Main Logic for M-BOUTIQUE Boutique IMS
+# app.py - Main Logic for M-COSMETICS Cosmetic IMS
 # This module handles routing, financial logic, and stock security protocols.
 
 import os
@@ -9,8 +9,8 @@ from models import db, User, Category, Product, Sale, StockAudit
 from sqlalchemy import text
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'nairobi-boutique-secure-key'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///boutique.db'
+app.config['SECRET_KEY'] = 'nairobi-cosmetics-secure-key'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///cosmetics.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db.init_app(app)
